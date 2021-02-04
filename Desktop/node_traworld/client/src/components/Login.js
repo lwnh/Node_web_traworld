@@ -49,9 +49,10 @@ function Login({ history }) {
         try {
             await axios.post('/api/login', data)
                 .then((response) => {
+                    console.log('login.js', response);
                     switch (response.data.success) {
                         case 200:   //success
-                            localStorage.setItem('user', JSON.stringify(response.data.userid))
+                            sessionStorage.setItem('user', JSON.stringify(response.data.userid))
                             // history.push('/');
                             window.location.replace('/');
                             break;

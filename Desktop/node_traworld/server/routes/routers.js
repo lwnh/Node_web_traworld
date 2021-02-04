@@ -59,17 +59,26 @@ router.post('/login', function (req, res) {
         userLogin(database, userid, userpw, (err, result) => {
             if (err) {
                 console.log(err);
-                res.json({ success: 100, msg: "server error"});
+                res.json({ success: 100, msg: "server error" });
             }
             if (result) {
                 console.dir(result);
-                res.json({ success: 200, msg: "success", userid});
+                if(req.session.user) {
+                    console.log('already session created')
+                } else {
+                    req.session.user = {
+                        name: result[0].name,
+                        userid,
+                        createTime : new Date(),
+                    }
+                }
+                res.json({ success: 200, msg: "success", userid });
             } else {
-                res.json({ success: 201, msg: "fail"});
+                res.json({ success: 201, msg: "fail" });
             }
         });
     } else {
-        res.json({ success: 300, msg: "database error"});
+        res.json({ success: 300, msg: "database error" });
     }
 })
 
@@ -87,19 +96,29 @@ router.post('/signup', function (req, res) {
         userRegister(database, name, userid, userpw, email, (err, result) => {
             if (err) {
                 console.log(err);
-                res.json({ success: 100, msg: "server error"});
+                res.json({ success: 100, msg: "server error" });
             }
             if (result.insertedCount > 0) {
-                res.json({ success: 200, msg: "success"});
+                res.json({ success: 200, msg: "success" });
             } else {
-                res.json({ success: 201, msg: "fail"});
+                res.json({ success: 201, msg: "fail" });
             }
         });
     } else {
-        res.json({ success: 300, msg: "database error"});
+        res.json({ success: 300, msg: "database error" });
     }
 })
 
+router.post('/logout', function (req, res) {
+    req.session.destroy((err) => {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log('destroy session')
+            res.end()
+        }
+    })
+})
 
 const userLogin = function (database, userid, userpw, callback) {
     const members = database.collection('member');
