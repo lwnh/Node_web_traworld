@@ -63,7 +63,7 @@ router.post('/login', function (req, res) {
             }
             if (result) {
                 console.dir(result);
-                res.json({ success: 200, msg: "success"});
+                res.json({ success: 200, msg: "success", userid});
             } else {
                 res.json({ success: 201, msg: "fail"});
             }

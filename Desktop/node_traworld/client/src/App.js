@@ -19,7 +19,6 @@ function App() {
     <GlobalStyles>
       <Navigator />
       <Route path="/" exact={true} component={Home}/>
-      <Route path="/home" component={Home}/>
       <Route path="/about" component={About}/>
       <Route path="/login" component={Login}/>
       <Route path="/contact" component={Contact}/>

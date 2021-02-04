@@ -49,12 +49,11 @@ function Login({ history }) {
         try {
             await axios.post('/api/login', data)
                 .then((response) => {
-                    console.log(response.data.success)
-                    console.log(response.data.msg)
-
                     switch (response.data.success) {
                         case 200:   //success
-                            history.push('/');
+                            localStorage.setItem('user', JSON.stringify(response.data.userid))
+                            // history.push('/');
+                            window.location.replace('/');
                             break;
                         case 201:   //fail
                             alert('아이디와 비밀번호를 확인해주세요.')
