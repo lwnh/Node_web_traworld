@@ -25,6 +25,7 @@ function Navigator() {
                 <Nav className="mr-auto">
                     <Nav.Link href="./">Home</Nav.Link>
                     <Nav.Link href="./about">About</Nav.Link>
+                    <Nav.Link href="./tour">Tour</Nav.Link>
                     <Nav.Link href="./contact">Contact</Nav.Link>
                 </Nav>
                 {isLogin ? <Button variant="outline-secondary" onClick={logoutHandler} href='/'>LOGOUT</Button> : <Button variant="outline-secondary" href="./login">LOGIN</Button>}

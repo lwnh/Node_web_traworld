@@ -7,7 +7,7 @@ const AboutBlock = styled.div`
     height: 100vh;
     align-items: center;
     justify-content: center;
-    background: #e0e0e0;
+    background: lightgray;
     margin: 0 auto;
 `;
 
@@ -16,9 +16,7 @@ const Title = styled.div`
     text-align: right;
     font-size: 3rem;
     font-weight: bold; 
-    color: #757575; 
     margin: 0 30px 0 100px;
-    text-shadow: 1px 1px 10px white;
 `;
 
 const Content = styled.div`
