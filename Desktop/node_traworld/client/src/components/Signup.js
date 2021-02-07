@@ -29,11 +29,26 @@ const SignupContent = styled.div`
 
 function Signup({ history }) {
     const [inputs, setInputs] = useState({
-        name: '',
-        userid: '',
-        userpw: '',
-        pwcheck: '',
-        email: ''
+        name: {
+            value: '',
+            error: false,
+        },
+        userid: {
+            value: '',
+            error: false,
+        },
+        userpw: {
+            value: '',
+            error: false,
+        },
+        pwcheck: {
+            value: '',
+            error: false,
+        },
+        email: {
+            value: '',
+            error: false,
+        },
     });
 
     const { name, userid, userpw, pwcheck, email } = inputs;
@@ -42,9 +57,32 @@ function Signup({ history }) {
         const { value, name } = e.target;
         setInputs({
             ...inputs,
-            [name]: value
+            [name]: {
+                value,
+                error: !isValidate(name, value),
+            }
         });
     };
+
+    const isValidate = (name, value) => {
+        let nameReg = /^[가-힝]{2,}$/;
+        let idReg = /^[a-zA-Z0-9]{4,12}$/;
+        let pwReg = /^[a-zA-z0-9]{4,12}$/;
+        let emailReg = /^[A-Za-z0-9_]+[A-Za-z0-9]*[@]{1}[A-Za-z0-9]+[A-Za-z0-9]*[.]{1}[A-Za-z]{1,3}$/;
+
+        switch (name) {
+            case "name":
+                return value.match(nameReg) ? true : false;
+            case "userid":
+                return value.match(idReg) ? true : false;
+            case "userpw":
+                return value.match(pwReg) ? true : false;
+            case "pwcheck":
+                return inputs.userpw.value === value ? true : false;
+            case "email":
+                return value.match(emailReg) ? true : false;
+        }
+    }
 
     const signupSubmit = async (e) => {
         e.preventDefault();
@@ -58,7 +96,7 @@ function Signup({ history }) {
                     switch (response.data.success) {
                         case 200:   //success
                             alert('회원가입이 완료되었습니다.')
-                            history.push('/');
+                            history.push('/login');
                             break;
                         case 201:   //fail
                             alert('회원가입에 실패했습니다. 다시 시도해주세요')
@@ -82,11 +120,11 @@ function Signup({ history }) {
         <SignupBlock>
             <SignupContent>
                 <form onSubmit={signupSubmit}>
-                    <TextField type="text" name="name" value={name} label="이름(Name)" onChange={onChange} variant="outlined" required fullWidth margin="normal" />
-                    <TextField type="text" name="userid" value={userid} label="아이디(ID)" onChange={onChange} variant="outlined" required fullWidth margin="normal" />
-                    <TextField type="password" name="userpw" value={userpw} label="비밀번호(Password)" onChange={onChange} variant="outlined" required fullWidth margin="normal" />
-                    <TextField type="password" name="pwcheck" value={pwcheck} label="비밀번호 확인(Password Check)" onChange={onChange} variant="outlined" required fullWidth margin="normal" />
-                    <TextField type="email" name="email" value={email} label="이메일(Email)" onChange={onChange} variant="outlined" required fullWidth margin="normal" />
+                    <TextField type="text" name="name" value={name.value} label="이름(Name)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={name.error} helperText={name.error && "이름을 확인하세요.(한글 2글자 이상)"} />
+                    <TextField type="text" name="userid" value={userid.value} label="아이디(ID)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={userid.error} helperText={userid.error && "아이디를 확인하세요.(영문자 혹은 숫자 4~12자 이내)"} />
+                    <TextField type="password" name="userpw" value={userpw.value} label="비밀번호(Password)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={userpw.error} helperText={userpw.error && "비밀번호를 확인하세요.(영문자 혹은 숫자 4~12자 이내)"} />
+                    <TextField type="password" name="pwcheck" value={pwcheck.value} label="비밀번호 확인(Password Check)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={pwcheck.error} helperText={pwcheck.error && "비밀번호가 일치하지 않습니다."} />
+                    <TextField type="email" name="email" value={email.value} label="이메일(Email)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={email.error} helperText={email.error && "이메일 형식을 확인해주세요."} />
                     <Button type="submit" variant="dark">SUBMIT</Button><br />
                     <Button variant="secondary" onClick={goBack}>CANCEL</Button><br />
                 </form>

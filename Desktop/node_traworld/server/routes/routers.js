@@ -83,13 +83,12 @@ router.post('/login', function (req, res) {
 })
 
 router.post('/signup', function (req, res) {
-    console.log('signup');
     const database = get();
 
-    const name = req.body.name;
-    const userid = req.body.userid;
-    const userpw = req.body.userpw;
-    const email = req.body.email;
+    const name = req.body.name.value;
+    const userid = req.body.userid.value;
+    const userpw = req.body.userpw.value;
+    const email = req.body.email.value;
 
     console.log(`signup : name:${name}, userid:${userid}, userpw:${userpw}, email:${email}`);
     if (database) {
@@ -144,7 +143,7 @@ const userRegister = function (database, name, userid, userpw, email, callback) 
 
     const members = database.collection('member');
 
-    members.insertOne([{ name, userid, userpw, email }], (err, result) => {
+    members.insertMany([{ name, userid, userpw, email }], (err, result) => {
         if (err) {
             console.log(err);
             callback(err, null);
