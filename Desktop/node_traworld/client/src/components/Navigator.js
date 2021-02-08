@@ -3,9 +3,13 @@ import { Navbar, Nav, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 
+const textStyle = {
+    margin: "10px",
+    color: "#6E757C",
+}
+
 function Navigator() {
     const isLogin = sessionStorage.getItem('user');
-    console.log(isLogin);
 
     const logoutHandler = async () => {
         sessionStorage.removeItem('user');
@@ -28,7 +32,10 @@ function Navigator() {
                     <Nav.Link href="./tour">Tour</Nav.Link>
                     <Nav.Link href="./contact">Contact</Nav.Link>
                 </Nav>
-                {isLogin ? <Button variant="outline-secondary" onClick={logoutHandler} href='/'>LOGOUT</Button> : <Button variant="outline-secondary" href="./login">LOGIN</Button>}
+                {isLogin && (<a href="./userInfo" style={textStyle}>{isLogin}님</a>)}
+                {isLogin ? (
+                    <Button variant="outline-secondary" onClick={logoutHandler} href='/'>LOGOUT</Button> 
+                ) : <Button variant="outline-secondary" href="./login">LOGIN</Button>}
             </Navbar>
         </>
     )

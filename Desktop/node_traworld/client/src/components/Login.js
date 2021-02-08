@@ -52,7 +52,7 @@ function Login({ history }) {
                     console.log('login.js', response);
                     switch (response.data.success) {
                         case 200:   //success
-                            sessionStorage.setItem('user', JSON.stringify(response.data.userid))
+                            sessionStorage.setItem('user', response.data.userid)
                             // history.push('/');
                             window.location.replace('/');
                             break;
