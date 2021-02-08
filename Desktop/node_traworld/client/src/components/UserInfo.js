@@ -15,7 +15,7 @@ const InfoBlock = styled.div`
 const InfoContent = styled.div`
     background: #e9ecef;
     margin-top: 5rem;
-    padding: 8rem 10rem;
+    padding: 7rem 10rem;
     .btn-secondary {
         margin-top: 1rem;
         width: 100%
@@ -27,7 +27,7 @@ const InfoContent = styled.div`
 `;
 
 const TitleBlock = styled.div`
-    text-align: left;
+    float: left;
     font-size: 2.5rem;
     font-weight: bold; 
     font-size: 2rem;
@@ -37,7 +37,7 @@ const TitleBlock = styled.div`
 `;
 
 function UserInfo() {
-    const userId = { userid: sessionStorage.getItem('user') }
+    const sessionId = { userid: sessionStorage.getItem('user') }
     const [userInfo, setUserInfo] = useState({
         name: {
             value: '',
@@ -60,8 +60,8 @@ function UserInfo() {
     const { name, userid, userpw, email } = userInfo;
 
     useEffect(() => {
-        if (!userId.userid) {
-            alert('비정상 접근');
+        if (!sessionId.userid) {
+            alert('비정상 접근입니다.');
             window.location.replace('/');
         } else {
             infoHandler();
@@ -70,7 +70,7 @@ function UserInfo() {
 
     const infoHandler = async () => {
         try {
-            await axios.post('/api/userinfo', userId)
+            await axios.post('/api/userinfo', sessionId)
                 .then((response) => {
                     switch (response.data.success) {
                         case 200:   //success
@@ -121,7 +121,7 @@ function UserInfo() {
         }
     }
 
-    const updateSubmit = async (e) => {
+    const updateHandler = async (e) => {
         e.preventDefault();
         const data = userInfo;
         try {
@@ -130,10 +130,36 @@ function UserInfo() {
                     switch (response.data.success) {
                         case 200:   //success
                             alert('정보수정이 완료되었습니다.')
-                            window.location.replace('/');
+                            window.location.reload();
                             break;
                         case 201:   //fail
                             alert('정보수정에 실패했습니다. 다시 시도해주세요.')
+                            break;
+                        case 100:   // server error
+                            alert('네트워크를 확인해주세요.')
+                            break;
+                    }
+                })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const deleteHandler = async (e) => {
+        e.preventDefault();
+        sessionStorage.removeItem('user');
+
+        const data = userInfo;
+        try {
+            await axios.post('/api/delete', data)
+                .then((response) => {
+                    switch (response.data.success) {
+                        case 200:   //success
+                            alert('회원탈퇴가 완료되었습니다.')
+                            window.location.replace('/');
+                            break;
+                        case 201:   //fail
+                            alert('회원탈퇴에 실패했습니다. 다시 시도해주세요.')
                             break;
                         case 100:   // server error
                             alert('네트워크를 확인해주세요.')
@@ -149,13 +175,14 @@ function UserInfo() {
         <InfoBlock>
             <InfoContent>
                 <TitleBlock>Information</TitleBlock>
-                <form onSubmit={updateSubmit}>
+                <form onSubmit={updateHandler}>
                     <TextField type="text" name="name" value={name.value} label="이름(Name)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={name.error} helperText={name.error && "이름을 확인하세요.(한글 2글자 이상)"} />
                     <TextField type="text" name="userid" value={userid.value} label="아이디(ID)" variant="outlined" required fullWidth margin="normal" disabled />
                     <TextField type="password" name="userpw" value={userpw.value} label="비밀번호(Password)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={userpw.error} helperText={userpw.error && "비밀번호를 확인하세요.(영문자 혹은 숫자 4~12자 이내)"} />
                     <TextField type="email" name="email" value={email.value} label="이메일(Email)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={email.error} helperText={email.error && "이메일 형식을 확인해주세요."} />
                     <Button type="submit" variant="dark">수정하기</Button><br />
                 </form>
+                <Button variant="secondary" onClick={deleteHandler}>회원탈퇴</Button><br />
             </InfoContent>
         </InfoBlock>
     )

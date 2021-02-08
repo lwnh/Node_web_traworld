@@ -48,7 +48,6 @@ function Login({ history }) {
         try {
             await axios.post('/api/login', data)
                 .then((response) => {
-                    console.log('login.js', response);
                     switch (response.data.success) {
                         case 200:   //success
                             sessionStorage.setItem('user', response.data.userid)
