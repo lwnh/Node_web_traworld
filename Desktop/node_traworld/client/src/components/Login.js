@@ -8,7 +8,6 @@ const LoginBlock = styled.div`
     display: block;
     margin: 0 auto;
     width: 70%;
-    height: 100vh;
     align-items: center;
     justify-content: center;
 `;
@@ -16,7 +15,7 @@ const LoginBlock = styled.div`
 const LoginContent = styled.div`
     background: #e9ecef;
     margin-top: 5rem;
-    padding: 15rem 10rem;
+    padding: 14rem 10rem;
     .btn-secondary {
         margin-top: 2rem;
         width: 100%

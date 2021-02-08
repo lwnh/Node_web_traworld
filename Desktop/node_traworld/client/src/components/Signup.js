@@ -8,7 +8,6 @@ const SignupBlock = styled.div`
     display: block;
     margin: 0 auto;
     width: 70%;
-    height: 100vh;
     align-items: center;
     justify-content: center;
 `;
@@ -16,7 +15,7 @@ const SignupBlock = styled.div`
 const SignupContent = styled.div`
     background: #e9ecef;
     margin-top: 5rem;
-    padding: 10rem 10rem;
+    padding: 7rem 10rem;
     .btn-secondary {
         margin-top: 1rem;
         width: 100%
