@@ -8,6 +8,7 @@ import Tour from './components/Tour'
 import Contact from './components/Contact'
 import Login from './components/Login'
 import Signup from './components/Signup'
+import UserInfo from './components/UserInfo'
 
 const GlobalStyles = styled.div`
   @import url('https://fonts.googleapis.com/earlyaccess/notosanskr.css');
@@ -25,6 +26,7 @@ function App() {
       <Route path="/contact" component={Contact}/>
       <Route path="/login" component={Login}/>
       <Route path="/signup" component={Signup}/>
+      <Route path="/userInfo" component={UserInfo}/>
     </GlobalStyles>
   );
 }

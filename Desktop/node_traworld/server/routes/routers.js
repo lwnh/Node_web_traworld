@@ -119,6 +119,55 @@ router.post('/logout', function (req, res) {
     })
 })
 
+router.post('/userinfo', function (req, res) {
+    const database = get();
+    const userid = req.body.userid;
+
+    if (database) {
+        userSelect(database, userid, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.json({ success: 100, msg: "server error" });
+            }
+            if (result) {
+                console.dir(result);
+                res.json({ success: 200, msg: "success", result });
+            } else {
+                res.json({ success: 201, msg: "fail" });
+            }
+        });
+    } else {
+        res.json({ success: 300, msg: "database error" });
+    }
+})
+
+router.post('/update', function (req, res) {
+    const database = get();
+
+    const name = req.body.name.value;
+    const userid = req.body.userid.value;
+    const userpw = req.body.userpw.value;
+    const email = req.body.email.value;
+
+    console.log(`update : name:${name}, userid:${userid}, userpw:${userpw}, email:${email}`);
+
+    if (database) {
+        userUpdate(database, name, userid, userpw, email, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.json({ success: 100, msg: "server error" });
+            }
+            if (result) {
+                res.json({ success: 200, msg: "success" });
+            } else {
+                res.json({ success: 201, msg: "fail" });
+            }
+        });
+    } else {
+        res.json({ success: 300, msg: "database error" });
+    }
+})
+
 const userLogin = function (database, userid, userpw, callback) {
     const members = database.collection('member');
 
@@ -150,9 +199,48 @@ const userRegister = function (database, name, userid, userpw, email, callback) 
             return;
         }
         if (result.insertedCount > 0) {
-            console.log(`사용자 document ${result.insertedCount} 추가`);
+            console.log(`사용자 ${result.insertedCount}명 추가`);
         } else {
-            console.log(`사용자 document 추가되지 않음`);
+            console.log(`사용자 추가되지 않음`);
+        }
+        callback(null, result);
+    });
+}
+
+const userSelect = function (database, userid, callback) {
+    const members = database.collection('member');
+
+    members.find({ userid }).toArray((err, result) => {
+        if (err) {
+            console.log(err);
+            callback(err, null);
+            return;
+        }
+        if (result.length > 0) {
+            console.log('find user info');
+            callback(null, result);
+        } else {
+            console.log('cannot find user info');
+            callback(null, null);
+        }
+    })
+}
+
+const userUpdate = function (database, name, userid, userpw, email, callback) {
+    console.log('userUpdate 호출');
+
+    const members = database.collection('member');
+
+    members.updateOne({userid}, {$set:{ name, userpw, email }}, (err, result) => {
+        if (err) {
+            console.log(err);
+            callback(err, null);
+            return;
+        }
+        if (result.modifiedCount > 0) {
+            console.log(`사용자 ${result.modifiedCount}명 정보 수정`);
+        } else {
+            console.log(`사용자 정보 수정되지 않음`);
         }
         callback(null, result);
     });
