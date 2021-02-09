@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt')
 
 const config = require('../config/key');
 const googleEmail = config.googleEmail;
@@ -185,58 +186,57 @@ router.post('/logout', function (req, res) {
 })
 
 const userLogin = function (database, userid, userpw, callback) {
-    const members = database.collection('member');
-
-    members.find({ userid, userpw }).toArray((err, result) => {
-        if (err) {
-            console.log(err);
-            callback(err, null);
-            return;
+    userSelect(database, userid, (err, result) => {
+        if (err) console.log(err);
+        if (result) {
+            bcrypt.compare(userpw, result[0].userpw, function (err, res) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                    return;
+                }
+                res ? callback(null, result) : callback(null, null);
+            });
         }
-        if (result.length > 0) {
-            console.log('find user');
-            callback(null, result);
-        } else {
-            console.log('cannot find user');
-            callback(null, null);
-        }
-    })
+    });
 }
 
 const userRegister = function (database, name, userid, userpw, email, callback) {
     const members = database.collection('member');
+    const saltRounds = 10;
 
-    members.insertMany([{ name, userid, userpw, email }], (err, result) => {
-        if (err) {
-            console.log(err);
-            callback(err, null);
-            return;
-        }
-        if (result.insertedCount > 0) {
-            console.log(`사용자 ${result.insertedCount}명 추가`);
-        } else {
-            console.log(`사용자 추가되지 않음`);
-        }
-        callback(null, result);
-    });
+    bcrypt
+        .hash(userpw, saltRounds)
+        .then(hash => {
+            members.insertMany([{ name, userid, userpw: hash, email }], (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                    return;
+                }
+                callback(null, result);
+            });
+        })
+        .catch(err => console.log(err));
 }
 
 const userUpdate = function (database, name, userid, userpw, email, callback) {
     const members = database.collection('member');
+    const saltRounds = 10;
 
-    members.updateOne({ userid }, { $set: { name, userpw, email } }, (err, result) => {
-        if (err) {
-            console.log(err);
-            callback(err, null);
-            return;
-        }
-        if (result.modifiedCount > 0) {
-            console.log(`사용자 ${result.modifiedCount}명 정보 수정`);
-        } else {
-            console.log(`사용자 정보 수정되지 않음`);
-        }
-        callback(null, result);
-    });
+    bcrypt
+        .hash(userpw, saltRounds)
+        .then(hash => {
+            members.updateOne({ userid }, { $set: { name, userpw: hash, email } }, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                    return;
+                }
+                callback(null, result);
+            });
+        })
+        .catch(err => console.log(err));
 }
 
 const userDelete = function (database, userid, callback) {
@@ -247,11 +247,6 @@ const userDelete = function (database, userid, callback) {
             console.log(err);
             callback(err, null);
             return;
-        }
-        if (result.deletedCount > 0) {
-            console.log(`사용자 ${result.deletedCount}명 삭제`);
-        } else {
-            console.log(`사용자 정보 삭제되지 않음`);
         }
         callback(null, result);
     });
@@ -267,10 +262,8 @@ const userSelect = function (database, userid, callback) {
             return;
         }
         if (result.length > 0) {
-            console.log('find user info');
             callback(null, result);
         } else {
-            console.log('cannot find user info');
             callback(null, null);
         }
     })
