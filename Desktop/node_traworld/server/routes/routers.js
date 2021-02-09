@@ -197,6 +197,8 @@ const userLogin = function (database, userid, userpw, callback) {
                 }
                 res ? callback(null, result) : callback(null, null);
             });
+        } else {
+            callback(null, null);
         }
     });
 }
