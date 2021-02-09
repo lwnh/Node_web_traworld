@@ -15,14 +15,12 @@ const ContactBlock =  styled.div`
 
 const MapBlock =  styled.div`
     float: left;
-    margin: 0 50px;
-
+    margin: 0 10%;
 `;
 
 const FormBlock =  styled.div`
     float: right;
-    margin: 0 50px;
-    padding: 0 50px 0 0;
+    padding: 0 10% 0 0;
 `;
 
 function Contact() {
