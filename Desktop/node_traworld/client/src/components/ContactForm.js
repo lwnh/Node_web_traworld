@@ -3,14 +3,7 @@ import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import { TextField } from "@material-ui/core"
 import axios from 'axios';
-
-const Title = styled.div`
-    float: left; 
-    font-weight: bold; 
-    font-size: 2rem;
-    border-bottom: 3px solid #212529; 
-    margin-bottom: 10px;
-`;
+import Title from './Title';
 
 const ButtonBlock = styled.div`
     display: flex;

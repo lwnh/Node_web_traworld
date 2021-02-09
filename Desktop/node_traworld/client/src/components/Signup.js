@@ -3,19 +3,21 @@ import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import { TextField } from "@material-ui/core"
 import axios from 'axios';
+import Title from './Title';
 
 const SignupBlock = styled.div`
-    display: block;
+    display: flex;
     margin: 0 auto;
     width: 70%;
     align-items: center;
     justify-content: center;
+    background: #e9ecef;
 `;
 
 const SignupContent = styled.div`
-    background: #e9ecef;
     margin-top: 5rem;
-    padding: 7rem 10rem;
+    padding: 5rem 10rem;
+    text-align: center;
     .btn-secondary {
         margin-top: 1rem;
         width: 100%
@@ -115,6 +117,7 @@ function Signup({ history }) {
     return (
         <SignupBlock>
             <SignupContent>
+                <Title>Sign Up</Title>
                 <form onSubmit={signupSubmit}>
                     <TextField type="text" name="name" value={name.value} label="이름(Name)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={name.error} helperText={name.error && "이름을 확인하세요.(한글 2글자 이상)"} />
                     <TextField type="text" name="userid" value={userid.value} label="아이디(ID)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={userid.error} helperText={userid.error && "아이디를 확인하세요.(영문자 혹은 숫자 4~12자 이내)"} />

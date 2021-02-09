@@ -3,19 +3,21 @@ import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import { TextField } from "@material-ui/core"
 import axios from 'axios';
+import Title from './Title';
 
 const InfoBlock = styled.div`
-    display: block;
+    display: flex;
     margin: 0 auto;
     width: 70%;
     align-items: center;
     justify-content: center;
+    background: #e9ecef;
 `;
 
 const InfoContent = styled.div`
-    background: #e9ecef;
     margin-top: 5rem;
     padding: 7rem 10rem;
+    text-align: center;
     .btn-secondary {
         margin-top: 1rem;
         width: 100%
@@ -24,16 +26,6 @@ const InfoContent = styled.div`
         margin-top: 1rem;
         width: 100%
     }
-`;
-
-const TitleBlock = styled.div`
-    float: left;
-    font-size: 2.5rem;
-    font-weight: bold; 
-    font-size: 2rem;
-    color: #212529;
-    border-bottom: 3px solid #212529; 
-    margin-bottom: 1.5rem;
 `;
 
 function UserInfo() {
@@ -174,7 +166,7 @@ function UserInfo() {
     return (
         <InfoBlock>
             <InfoContent>
-                <TitleBlock>Information</TitleBlock>
+                <Title>Information</Title>
                 <form onSubmit={updateHandler}>
                     <TextField type="text" name="name" value={name.value} label="이름(Name)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={name.error} helperText={name.error && "이름을 확인하세요.(한글 2글자 이상)"} />
                     <TextField type="text" name="userid" value={userid.value} label="아이디(ID)" variant="outlined" required fullWidth margin="normal" disabled />

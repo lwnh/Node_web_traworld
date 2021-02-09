@@ -3,19 +3,21 @@ import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import { TextField } from "@material-ui/core"
 import axios from 'axios';
+import Title from './Title';
 
 const LoginBlock = styled.div`
-    display: block;
+    display: flex;
     margin: 0 auto;
     width: 70%;
     align-items: center;
     justify-content: center;
+    background: #e9ecef;
 `;
 
 const LoginContent = styled.div`
-    background: #e9ecef;
-    margin-top: 5rem;
+    margin-top: 3rem;
     padding: 14rem 10rem;
+    text-align: center;
     .btn-secondary {
         margin-top: 2rem;
         width: 100%
@@ -71,6 +73,7 @@ function Login({ history }) {
     return (
         <LoginBlock>
             <LoginContent>
+                <Title>Login</Title>
                 <form onSubmit={loginSubmit}>
                     <TextField type="text" name="userid" label="ID" required fullWidth margin="normal" onChange={onChange} value={userid} />
                     <TextField type="password" name="userpw" label="PASSWORD" required fullWidth margin="normal" onChange={onChange} value={userpw} />
