@@ -10,8 +10,6 @@ const googlePassword = config.googlePassword;
 const { get } = require('../database/database');
 
 router.post('/contact', function (req, res) {
-    console.log(req.body);
-
     const fromemail = req.body.email;
     const from = req.body.name;
     const toemail = googleEmail;
@@ -142,6 +140,14 @@ router.post('/delete', function (req, res) {
                 res.json({ success: 100, msg: "server error" });
             }
             if (result.deletedCount > 0) {
+                req.session.destroy((err) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log('destroy session')
+                        res.end()
+                    }
+                })
                 res.json({ success: 200, msg: "success" });
             } else {
                 res.json({ success: 201, msg: "fail" });
