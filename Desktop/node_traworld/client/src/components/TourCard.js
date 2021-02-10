@@ -6,6 +6,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
+import Rating from '@material-ui/lab/Rating';
 
 const useStyles = makeStyles({
     root: {
@@ -24,11 +25,17 @@ const textCountry = {
 }
 
 const textDetail = {
+    marginBottom: "1rem",
     fontSize: "0.8rem",
     color: "gray",
 }
 
-function TourCard({ img, country, detail, onClick }) {
+const textPrice = {
+    marginLeft: "0.2rem",
+    fontSize: "1.0rem",
+}
+
+function TourCard({ img, country, detail, rating, price, onClick }) {
     const classes = useStyles();
 
     return (
@@ -42,12 +49,16 @@ function TourCard({ img, country, detail, onClick }) {
                 <CardContent>
                     <div style={textCountry}>{country}</div>
                     <div style={textDetail}>{detail}</div>
+                    <Rating
+                        name="feedback"
+                        value={rating}
+                        size="small"
+                        precision={0.5}
+                        readOnly
+                    />
+                    <div style={textPrice}>{price}</div>
                 </CardContent>
             </CardActionArea>
-            <CardActions>
-                <Button size="small" color="primary">Reservation</Button>
-                <Button size="small" color="primary">More</Button>
-            </CardActions>
         </Card>
     )
 }
