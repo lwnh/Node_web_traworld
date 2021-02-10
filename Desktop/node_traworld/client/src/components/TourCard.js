@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
     root: {
+        minWidth: 300,
         maxWidth: 300,
         margin: 10,
     },
@@ -27,12 +28,12 @@ const textDetail = {
     color: "gray",
 }
 
-function TourCard({ img, country, detail }) {
+function TourCard({ img, country, detail, onClick }) {
     const classes = useStyles();
 
     return (
         <Card className={classes.root}>
-            <CardActionArea>
+            <CardActionArea onClick={onClick}>
                 <CardMedia
                     className={classes.media}
                     image={img}

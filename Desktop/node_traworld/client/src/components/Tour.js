@@ -1,43 +1,113 @@
-import React from 'react';
+import React, { useState } from 'react'
 import styled from 'styled-components';
 import TourCard from './TourCard';
+import TourViewer from './TourViewer';
+
+import imgUsa from '../images/img_usa.jpg';
 import imgCanada from '../images/img_canada.jpg';
 import imgFrance from '../images/img_paris.jpg';
 import imgItaly from '../images/img_rome.jpg';
 import imgSingapore from '../images/img_singapore.jpg';
 import imgTaiwan from '../images/img_taipei.jpg';
-import imgUsa from '../images/img_usa.jpg';
+import imgThailand from '../images/img_thailand.jpg';
+import imgVietnam from '../images/img_vietnam.jpg';
 
 const TourBlock = styled.div`
     display: flex;
     background: lightgray;
+`;
+
+const TourContent = styled.div`
+    padding: 5rem 0;
+`;
+
+const CardBlock = styled.div`
+    display: flex; 
+    flex-flow: row wrap;
+    width: 100%;
     margin: 0 auto;
     align-items: center;
     justify-content: center;
 `;
 
-const TourContent = styled.div`
-    padding: 5rem;
-`;
-
-const CardBlock = styled.div`
-    display: flex; 
-`;
-
 function Tour() {
+    const countryItem = [
+        {
+            src: imgUsa,
+            name: '미국(USA)',
+            detail: '[BEST] [2박3일] LA투어(야경포함), LALALAND 촬영지 투어(그리피스 천문대, 할리우드 사인)',
+        },
+        {
+            src: imgCanada,
+            name: '캐나다(Canada)',
+            detail: '[4박5일] 캐나다 동부(퀘벡+몬트리울) 핵심 패키지 투어(도깨비 호텔-샤토 프롱트낙 호텔, 쁘띠 샹플랭)',
+        },
+        {
+            src: imgFrance,
+            name: '프랑스(France)',
+            detail: '[일일투어] 파리시내 + 몽마르트 가성비 만점 차량투어 (10가지 할인 혜택)',
+        },
+        {
+            src: imgItaly,
+            name: '이탈리아(Italy)',
+            detail: '[2박3일] 로마 시내부터 남부까지 풀코스 투어 (당일예약 가능)',
+        },
+        {
+            src: imgSingapore,
+            name: '싱가폴(Singapore)',
+            detail: '[3박4일] 싱가폴 완전정복 투어! 마리나 베이 샌즈 전망대부터 가든스 바이 더 베이까지',
+        },
+        {
+            src: imgTaiwan,
+            name: '대만(Taiwan)',
+            detail: '[BEST] [일일투어] 예스진지+지우펀 160분 홍등 버스투어 버블티시먼역 (당일예약 가능)',
+        },
+        {
+            src: imgThailand,
+            name: '태국(Thailand)',
+            detail: '[일일투어] 방콕 숨은 골목 도보여행, 리얼 방콕투어 (당일예약 가능)',
+        },
+        {
+            src: imgVietnam,
+            name: '베트남(Vietnam)',
+            detail: '[일일투어] 다낭 바나힐 체크아웃 단독투어+12시간 내맘대로 차량이용+공항드랍',
+        },
+    ];
+
+    const [currentItem, setCurrentItem] = useState(0);
+    const [isViewerOpen, setIsViewerOpen] = useState(false);
+
+    const openImageViewr = (index) => {
+        setCurrentItem(index);
+        setIsViewerOpen(true);
+    }
+
+    const closeImageViewer = () => {
+        setCurrentItem(0);
+        setIsViewerOpen(false);
+    };
+
     return (
         <TourBlock>
             <TourContent>
                 <CardBlock>
-                    <TourCard img={imgUsa} country="미국(USA)" detail="lorem"></TourCard>
-                    <TourCard img={imgCanada} country="캐나다(Canada)" detail="lorem"></TourCard>
-                    <TourCard img={imgFrance} country="프랑스(France)" detail="lorem"></TourCard>
+                    {countryItem.map((item, index) =>
+                        <TourCard
+                            img={item.src}
+                            country={item.name}
+                            detail={item.detail}
+                            onClick={() => openImageViewr(index)}
+                        />
+                    )}
                 </CardBlock>
-                <CardBlock>
-                    <TourCard img={imgItaly} country="이탈리아(Italy)" detail="lorem"></TourCard>
-                    <TourCard img={imgSingapore} country="싱가폴(Singapore)" detail="lorem"></TourCard>
-                    <TourCard img={imgTaiwan} country="대만(Taiwan)" detail="lorem"></TourCard>
-                </CardBlock>
+                {isViewerOpen && (
+                    <TourViewer
+                        visible={isViewerOpen}
+                        title={countryItem[currentItem].name}
+                        content={countryItem[currentItem].detail}
+                        onClose={closeImageViewer}
+                    />
+                )}
             </TourContent>
         </TourBlock>
     );
