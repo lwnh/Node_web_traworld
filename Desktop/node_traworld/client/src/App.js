@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import { Route } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import Navigator from './components/Navigator'
 import Home from './components/Home'
 import About from './components/About'
@@ -20,13 +20,16 @@ function App() {
   return (
     <GlobalStyles>
       <Navigator />
-      <Route path="/" exact={true} component={Home}/>
-      <Route path="/about" component={About}/>
-      <Route path="/tour" component={Tour}/>
-      <Route path="/contact" component={Contact}/>
-      <Route path="/login" component={Login}/>
-      <Route path="/signup" component={Signup}/>
-      <Route path="/userInfo" component={UserInfo}/>
+      <Switch>
+        <Route path="/" exact={true} component={Home} />
+        <Route path="/about" component={About} />
+        <Route path="/tour" component={Tour} />
+        <Route path="/contact" component={Contact} />
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/userInfo" component={UserInfo} />
+        <Redirect path="*" to="/" />
+      </Switch>
     </GlobalStyles>
   );
 }
