@@ -17,6 +17,10 @@ app.use(expressSession({
 
 app.use('/api', require('./server/routes/routers'));
 
+app.all('*', function(req, res){
+    res.status(404).send('<h1>요청한 페이지를 찾을 수 없습니다.</h1>');
+});
+
 app.listen(port, () => {
     console.log(`Server Running at ${port}`);
     database();
