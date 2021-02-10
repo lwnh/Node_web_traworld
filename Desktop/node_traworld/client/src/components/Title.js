@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 const TitleBlock = styled.div`
     display: inline-block;
-    font-size: 2.5rem;
     font-weight: bold; 
     font-size: 2rem;
     color: #212529;

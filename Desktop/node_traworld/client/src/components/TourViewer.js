@@ -1,7 +1,32 @@
 import React from 'react'
 import Modal from 'react-bootstrap/Modal'
+import Button from '@material-ui/core/Button';
+import styled from 'styled-components';
 
-function TourViewer({ visible, title, content, onClose}) {
+const TitleText = styled.div`
+    font-weight: bold; 
+    font-size: 2rem;
+    margin: 0 0.5rem;
+`;
+
+const ContentText = styled.div`
+    text-align: left;
+    font-size: 1rem;
+    color: gray;
+    margin: 0.5rem 0;
+`;
+
+const ImgStyle = styled.img`
+    display: block;
+    width: 100%;
+    height: 300px;
+`;
+
+const modalStyle = {
+    textAlign: "center",
+};
+
+function TourViewer({ visible, img, title, content, onClose }) {
     return (
         <>
             <Modal
@@ -11,9 +36,14 @@ function TourViewer({ visible, title, content, onClose}) {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>{ title }</Modal.Title>
+                    <TitleText>{title}</TitleText>
                 </Modal.Header>
-                <Modal.Body>{ content }</Modal.Body>
+                <Modal.Body style={modalStyle}>
+                    <ImgStyle src={img} alt={title} />
+                    <ContentText>{content}</ContentText>
+                    <Button color="secondary" href="">예약하기</Button>
+                    <Button href="">후기보기</Button>
+                </Modal.Body>
             </Modal>
         </>
     )

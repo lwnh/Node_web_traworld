@@ -122,6 +122,7 @@ function Tour() {
                 {isViewerOpen && (
                     <TourViewer
                         visible={isViewerOpen}
+                        img={countryItem[currentItem].src}
                         title={countryItem[currentItem].name}
                         content={countryItem[currentItem].detail}
                         onClose={closeImageViewer}
