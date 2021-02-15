@@ -36,6 +36,9 @@ Node.js와 React를 이용한 여행 투어 예약 웹사이트
 ### Login page
 ![traworld_login](./image/traworld_login.png)
 
+### SignUp page
+![traworld_signup](./image/traworld_signup.png)
+
 ### User Information page
 ![traworld_info](./image/traworld_info.png)
 
