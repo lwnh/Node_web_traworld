@@ -88,25 +88,29 @@ function Signup({ history }) {
     const signupSubmit = async (e) => {
         e.preventDefault();
         const data = inputs;
-        try {
-            await axios.post('/api/signup', data)
-                .then((response) => {
-                    switch (response.data.success) {
-                        case 200:   //success
-                            alert('회원가입이 완료되었습니다.')
-                            history.push('/login');
-                            break;
-                        case 201:   //fail
-                            alert('회원가입에 실패했습니다. 다시 시도해주세요')
-                            setInputs({ ...inputs, userpw: '' })
-                            break;
-                        case 100:   // server error
-                            break;
-                    }
-                })
-        } catch (error) {
-            console.log(error);
-            alert('회원가입에 실패했습니다.');
+        if (data.name.error || data.userid.error || data.userpw.error || data.pwcheck.error || data.email.error) {
+            return alert('에러메세지를 확인해주세요');
+        } else {
+            try {
+                await axios.post('/api/signup', data)
+                    .then((response) => {
+                        switch (response.data.success) {
+                            case 200:   //success
+                                alert('회원가입이 완료되었습니다.')
+                                history.push('/login');
+                                break;
+                            case 201:   //fail
+                                alert('회원가입에 실패했습니다. 다시 시도해주세요.')
+                                setInputs({ ...inputs, userpw: '' })
+                                break;
+                            case 100:   // server error
+                                break;
+                        }
+                    })
+            } catch (error) {
+                console.log(error);
+                alert('회원가입에 실패했습니다.');
+            }
         }
     }
 
