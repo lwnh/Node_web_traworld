@@ -1,23 +1,21 @@
-const MongoClient = require('mongodb').MongoClient;
-const databaseUrl = 'mongodb://localhost:27017';
+const mongoose = require('mongoose');
+const databaseUrl = 'mongodb://localhost:27017/nodedb';
 
 let database;
 
-module.exports = async () => {
-    try {
-        database = await MongoClient.connect(databaseUrl, (err, db) => {
-            if(err){
-                console.log(err);
-            }else{
-                const tempdb = db.db('nodedb');
-                database = tempdb;
-                console.log('mongodb connect ... ');
-            }
-        });
-    } catch (e) {
-        console.log("Could not connect to mongodb");
-    }
-  }
+module.exports = () => {
+  mongoose.connect(databaseUrl, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  })
+    .then(() => {
+      console.log('mongoose connect...');
+      database = mongoose.connection;
+    })
+    .catch((e) => console.log("mongoose connection error...", e));
+};
 
-  module.exports.get = () => database;
-  module.exports.close = () => database.close()
+module.exports.get = () => database;
+module.exports.close = () => database.close()

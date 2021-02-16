@@ -57,10 +57,12 @@ function Login({ history }) {
                             window.location.replace('/');
                             break;
                         case 201:   //fail
-                            alert('아이디와 비밀번호를 확인해주세요.')
+                            alert('비밀번호를 확인해주세요.')
                             setInputs({ ...inputs, userpw: '' })
                             break;
-                        case 100:   // server error
+                        case 202:   //user undefined
+                            alert('등록되지 않은 아이디입니다. 회원가입을 해주세요.')
+                            setInputs({ userid: '', userpw: '' })
                             break;
                     }
                 })

@@ -8,6 +8,7 @@ const googleEmail = config.googleEmail;
 const googlePassword = config.googlePassword;
 
 const { get } = require('../database/database');
+const userModel = require('../database/model');
 
 router.post('/contact', function (req, res) {
     const fromemail = req.body.email;
@@ -53,27 +54,34 @@ router.post('/login', function (req, res) {
     const userpw = req.body.userpw;
 
     if (database) {
-        userLogin(database, userid, userpw, (err, result) => {
-            if (err) {
-                console.log(err);
-                res.json({ success: 100, msg: "server error" });
-            }
-            if (result) {
-                console.dir(result);
-                if (req.session.user) {
-                    console.log('already session created')
-                } else {
-                    req.session.user = {
-                        name: result[0].name,
-                        userid,
-                        createTime: new Date(),
+        userModel.find({ userid })
+            .then(result => {
+                bcrypt.compare(userpw, result[0].userpw, function (err, compareResult) {
+                    if (err) {
+                        console.log(err);
+                        return;
                     }
-                }
-                res.json({ success: 200, msg: "success", userid });
-            } else {
-                res.json({ success: 201, msg: "fail" });
-            }
-        });
+                    if (compareResult) {
+                        console.log(result)
+                        if (req.session.user) {
+                            console.log('already session created')
+                        } else {
+                            req.session.user = {
+                                name: result[0].name,
+                                userid,
+                                createTime: new Date(),
+                            }
+                        }
+                        res.json({ success: 200, msg: "success", userid });
+                    } else {
+                        res.json({ success: 201, msg: "fail" });
+                    }
+                })
+            })
+            .catch(err => {
+                console.log(err);
+                res.json({ success: 202, msg: "fail" }); //user undefined
+            })
     } else {
         res.json({ success: 300, msg: "database error" });
     }
@@ -81,6 +89,7 @@ router.post('/login', function (req, res) {
 
 router.post('/signup', function (req, res) {
     const database = get();
+    const saltRounds = 10;
 
     const name = req.body.name.value;
     const userid = req.body.userid.value;
@@ -88,17 +97,24 @@ router.post('/signup', function (req, res) {
     const email = req.body.email.value;
 
     if (database) {
-        userRegister(database, name, userid, userpw, email, (err, result) => {
-            if (err) {
-                console.log(err);
-                res.json({ success: 100, msg: "server error" });
-            }
-            if (result.insertedCount > 0) {
-                res.json({ success: 200, msg: "success" });
-            } else {
+        bcrypt
+            .hash(userpw, saltRounds)
+            .then(hash => {
+                const user = new userModel({ name, userid, userpw: hash, email });
+                user.save()
+                    .then(result => {
+                        console.log(result)
+                        res.json({ success: 200, msg: "success" });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.json({ success: 201, msg: "fail" });
+                    })
+            })
+            .catch(err => {
+                console.log(err)
                 res.json({ success: 201, msg: "fail" });
-            }
-        });
+            });
     } else {
         res.json({ success: 300, msg: "database error" });
     }
@@ -106,6 +122,7 @@ router.post('/signup', function (req, res) {
 
 router.post('/update', function (req, res) {
     const database = get();
+    const saltRounds = 10;
 
     const name = req.body.name.value;
     const userid = req.body.userid.value;
@@ -113,17 +130,22 @@ router.post('/update', function (req, res) {
     const email = req.body.email.value;
 
     if (database) {
-        userUpdate(database, name, userid, userpw, email, (err, result) => {
-            if (err) {
-                console.log(err);
-                res.json({ success: 100, msg: "server error" });
-            }
-            if (result.modifiedCount > 0) {
-                res.json({ success: 200, msg: "success" });
-            } else {
+        bcrypt
+            .hash(userpw, saltRounds)
+            .then(hash => {
+                userModel.findOneAndUpdate({ userid }, { name, userpw: hash, email })
+                    .then(result => {
+                        res.json({ success: 200, msg: "success" });
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        res.json({ success: 201, msg: "fail" });
+                    })
+            })
+            .catch(err => {
+                console.log(err)
                 res.json({ success: 201, msg: "fail" });
-            }
-        });
+            });
     } else {
         res.json({ success: 300, msg: "database error" });
     }
@@ -134,12 +156,8 @@ router.post('/delete', function (req, res) {
     const userid = req.body.userid.value;
 
     if (database) {
-        userDelete(database, userid, (err, result) => {
-            if (err) {
-                console.log(err);
-                res.json({ success: 100, msg: "server error" });
-            }
-            if (result.deletedCount > 0) {
+        userModel.findOneAndRemove({ userid })
+            .then(result => {
                 req.session.destroy((err) => {
                     if (err) {
                         console.log(err);
@@ -149,10 +167,11 @@ router.post('/delete', function (req, res) {
                     }
                 })
                 res.json({ success: 200, msg: "success" });
-            } else {
+            })
+            .catch(err => {
+                console.log(err)
                 res.json({ success: 201, msg: "fail" });
-            }
-        });
+            })
     } else {
         res.json({ success: 300, msg: "database error" });
     }
@@ -163,18 +182,14 @@ router.post('/userinfo', function (req, res) {
     const userid = req.body.userid;
 
     if (database) {
-        userSelect(database, userid, (err, result) => {
-            if (err) {
-                console.log(err);
-                res.json({ success: 100, msg: "server error" });
-            }
-            if (result) {
-                console.dir(result);
+        userModel.find({ userid })
+            .then(result => {
                 res.json({ success: 200, msg: "success", result });
-            } else {
+            })
+            .catch(err => {
+                console.log(err);
                 res.json({ success: 201, msg: "fail" });
-            }
-        });
+            })
     } else {
         res.json({ success: 300, msg: "database error" });
     }
@@ -190,91 +205,5 @@ router.post('/logout', function (req, res) {
         }
     })
 })
-
-const userLogin = function (database, userid, userpw, callback) {
-    userSelect(database, userid, (err, result) => {
-        if (err) console.log(err);
-        if (result) {
-            bcrypt.compare(userpw, result[0].userpw, function (err, res) {
-                if (err) {
-                    console.log(err);
-                    callback(err, null);
-                    return;
-                }
-                res ? callback(null, result) : callback(null, null);
-            });
-        } else {
-            callback(null, null);
-        }
-    });
-}
-
-const userRegister = function (database, name, userid, userpw, email, callback) {
-    const members = database.collection('member');
-    const saltRounds = 10;
-
-    bcrypt
-        .hash(userpw, saltRounds)
-        .then(hash => {
-            members.insertMany([{ name, userid, userpw: hash, email }], (err, result) => {
-                if (err) {
-                    console.log(err);
-                    callback(err, null);
-                    return;
-                }
-                callback(null, result);
-            });
-        })
-        .catch(err => console.log(err));
-}
-
-const userUpdate = function (database, name, userid, userpw, email, callback) {
-    const members = database.collection('member');
-    const saltRounds = 10;
-
-    bcrypt
-        .hash(userpw, saltRounds)
-        .then(hash => {
-            members.updateOne({ userid }, { $set: { name, userpw: hash, email } }, (err, result) => {
-                if (err) {
-                    console.log(err);
-                    callback(err, null);
-                    return;
-                }
-                callback(null, result);
-            });
-        })
-        .catch(err => console.log(err));
-}
-
-const userDelete = function (database, userid, callback) {
-    const members = database.collection('member');
-
-    members.deleteOne({ userid }, (err, result) => {
-        if (err) {
-            console.log(err);
-            callback(err, null);
-            return;
-        }
-        callback(null, result);
-    });
-}
-
-const userSelect = function (database, userid, callback) {
-    const members = database.collection('member');
-
-    members.find({ userid }).toArray((err, result) => {
-        if (err) {
-            console.log(err);
-            callback(err, null);
-            return;
-        }
-        if (result.length > 0) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
-}
 
 module.exports = router;

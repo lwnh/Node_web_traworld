@@ -103,8 +103,6 @@ function Signup({ history }) {
                                 alert('회원가입에 실패했습니다. 다시 시도해주세요.')
                                 setInputs({ ...inputs, userpw: '' })
                                 break;
-                            case 100:   // server error
-                                break;
                         }
                     })
             } catch (error) {

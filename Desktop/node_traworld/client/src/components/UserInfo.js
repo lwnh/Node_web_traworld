@@ -77,9 +77,6 @@ function UserInfo() {
                         case 201:   //fail
                             alert('정보확인에 실패했습니다. 다시 시도해주세요.')
                             break;
-                        case 100:   // server error
-                            alert('네트워크를 확인해주세요.')
-                            break;
                     }
                 })
         } catch (error) {
@@ -127,9 +124,6 @@ function UserInfo() {
                         case 201:   //fail
                             alert('정보수정에 실패했습니다. 다시 시도해주세요.')
                             break;
-                        case 100:   // server error
-                            alert('네트워크를 확인해주세요.')
-                            break;
                     }
                 })
         } catch (error) {
@@ -152,9 +146,6 @@ function UserInfo() {
                             break;
                         case 201:   //fail
                             alert('회원탈퇴에 실패했습니다. 다시 시도해주세요.')
-                            break;
-                        case 100:   // server error
-                            alert('네트워크를 확인해주세요.')
                             break;
                     }
                 })
