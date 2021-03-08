@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt')
+const passport = require('passport');
 
 const config = require('../config/key');
 const googleEmail = config.googleEmail;
@@ -48,44 +49,16 @@ router.post('/contact', function (req, res) {
     });
 })
 
-router.post('/login', function (req, res) {
-    const database = get();
-    const userid = req.body.userid;
-    const userpw = req.body.userpw;
-
-    if (database) {
-        userModel.find({ userid })
-            .then(result => {
-                bcrypt.compare(userpw, result[0].userpw, function (err, compareResult) {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    if (compareResult) {
-                        console.log(result)
-                        if (req.session.user) {
-                            console.log('already session created')
-                        } else {
-                            req.session.user = {
-                                name: result[0].name,
-                                userid,
-                                createTime: new Date(),
-                            }
-                        }
-                        res.json({ success: 200, msg: "success", userid });
-                    } else {
-                        res.json({ success: 201, msg: "fail" });
-                    }
-                })
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ success: 202, msg: "fail" }); //user undefined
-            })
-    } else {
-        res.json({ success: 300, msg: "database error" });
-    }
-})
+router.post('/login', function (req, res, next) {
+    passport.authenticate('local-login', function (err, user, info) {
+        if (err) { return next(err); }
+        if (!user) { return res.json(info); }
+        req.logIn(user, function (err) {
+            if (err) { return next(err); }
+            return res.json(info);
+        });
+    })(req, res, next);
+});
 
 router.post('/signup', function (req, res) {
     const database = get();

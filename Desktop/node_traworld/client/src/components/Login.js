@@ -50,18 +50,20 @@ function Login({ history }) {
         try {
             await axios.post('/api/login', data)
                 .then((response) => {
+                    console.log('re' , response.data);
+
                     switch (response.data.success) {
                         case 200:   //success
                             sessionStorage.setItem('user', response.data.userid)
                             // history.push('/');
                             window.location.replace('/');
                             break;
-                        case 201:   //fail
-                            alert('비밀번호를 확인해주세요.')
+                        case 201:   //password fail
+                            alert(response.data.message)
                             setInputs({ ...inputs, userpw: '' })
                             break;
                         case 202:   //user undefined
-                            alert('등록되지 않은 아이디입니다. 회원가입을 해주세요.')
+                            alert(response.data.message)
                             setInputs({ userid: '', userpw: '' })
                             break;
                     }

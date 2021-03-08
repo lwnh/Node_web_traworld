@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const expressSession = require('express-session');
 const database = require('./server/database/database');
+const passport = require('passport');
+const configPassport = require('./server/config/passport');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -15,6 +17,9 @@ app.use(expressSession({
     saveUninitialized: true
 }))
 
+app.use(passport.initialize());
+app.use(passport.session());
+configPassport(passport);
 app.use('/api', require('./server/routes/routers'));
 
 app.all('*', function(req, res){
