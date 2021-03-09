@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto');
+const bcrypt = require('bcrypt')
 
 const userSchema = new mongoose.Schema({
 	userIdx: mongoose.Schema.Types.ObjectId,
@@ -11,5 +11,11 @@ const userSchema = new mongoose.Schema({
 }, {
 	versionKey: false,
 });
+
+userSchema.methods.checkPassword = function (inputpw, done) {
+	bcrypt.compare(inputpw, this.userpw, function (err, isMatch) {
+		done(err, isMatch);
+	});
+};
 
 module.exports = mongoose.model('User', userSchema);
