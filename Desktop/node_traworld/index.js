@@ -6,6 +6,7 @@ const configPassport = require('./server/config/passport');
 const database = require('./server/database/database');
 
 const app = express();
+const router = express.Router();
 const port = process.env.PORT || 5000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,9 +22,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 configPassport(passport);
 
-app.use('/api', require('./server/routes/routers'));
+const indexRouter = require('./server/routes/routers')(router, passport);
+app.use('/api', indexRouter);
 
-app.all('*', function(req, res){
+app.all('*', function (req, res) {
     res.status(404).send('<h1>요청한 페이지를 찾을 수 없습니다.</h1>');
 });
 
