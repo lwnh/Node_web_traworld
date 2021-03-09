@@ -28,7 +28,7 @@ const LoginContent = styled.div`
     }
 `;
 
-function Login({ history }) {
+function Login() {
     const [inputs, setInputs] = useState({
         userid: '',
         userpw: '',
@@ -50,12 +50,9 @@ function Login({ history }) {
         try {
             await axios.post('/api/login', data)
                 .then((response) => {
-                    console.log('re' , response.data);
-
                     switch (response.data.success) {
                         case 200:   //success
                             sessionStorage.setItem('user', response.data.userid)
-                            // history.push('/');
                             window.location.replace('/');
                             break;
                         case 201:   //password fail

@@ -83,38 +83,39 @@ function Signup({ history }) {
             case "email":
                 return value.match(emailReg) ? true : false;
         }
-    }
+    };
 
     const signupSubmit = async (e) => {
         e.preventDefault();
-        const data = inputs;
+        let data = inputs;
         if (data.name.error || data.userid.error || data.userpw.error || data.pwcheck.error || data.email.error) {
             return alert('에러메세지를 확인해주세요');
         } else {
+            data = { name: name.value, userid: userid.value, userpw: userpw.value, email: email.value };
             try {
                 await axios.post('/api/signup', data)
                     .then((response) => {
                         switch (response.data.success) {
                             case 200:   //success
-                                alert('회원가입이 완료되었습니다.')
-                                history.push('/login');
+                                alert(response.data.message);
+                                window.location.replace('/login');
                                 break;
                             case 201:   //fail
-                                alert('회원가입에 실패했습니다. 다시 시도해주세요.')
-                                setInputs({ ...inputs, userpw: '' })
+                                alert(response.data.message);
+                                window.location.reload();
                                 break;
                         }
                     })
             } catch (error) {
                 console.log(error);
                 alert('회원가입에 실패했습니다.');
-            }
-        }
-    }
+            };
+        };
+    };
 
     const goBack = () => {
         history.goBack();
-    }
+    };
 
     return (
         <SignupBlock>

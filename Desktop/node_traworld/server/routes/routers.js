@@ -60,38 +60,12 @@ router.post('/login', function (req, res, next) {
     })(req, res, next);
 });
 
-router.post('/signup', function (req, res) {
-    const database = get();
-    const saltRounds = 10;
-
-    const name = req.body.name.value;
-    const userid = req.body.userid.value;
-    const userpw = req.body.userpw.value;
-    const email = req.body.email.value;
-
-    if (database) {
-        bcrypt
-            .hash(userpw, saltRounds)
-            .then(hash => {
-                const user = new userModel({ name, userid, userpw: hash, email });
-                user.save()
-                    .then(result => {
-                        console.log(result)
-                        res.json({ success: 200, msg: "success" });
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        res.json({ success: 201, msg: "fail" });
-                    })
-            })
-            .catch(err => {
-                console.log(err)
-                res.json({ success: 201, msg: "fail" });
-            });
-    } else {
-        res.json({ success: 300, msg: "database error" });
-    }
-})
+router.post('/signup', function (req, res, next) {
+    passport.authenticate('local-signup', function (err, user, info) {
+        if (err) { return next(err); }
+        res.json(info)
+    })(req, res, next);
+});
 
 router.post('/update', function (req, res) {
     const database = get();
