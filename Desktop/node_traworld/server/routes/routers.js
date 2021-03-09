@@ -143,14 +143,10 @@ router.post('/userinfo', function (req, res) {
 })
 
 router.post('/logout', function (req, res) {
-    req.session.destroy((err) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log('destroy session')
-            res.end()
-        }
-    })
-})
+    req.logout();
+    req.session.save(function () {
+        res.redirect('/');
+    });
+});
 
 module.exports = router;
