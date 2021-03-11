@@ -85,7 +85,6 @@ module.exports = (router, passport) => {
         const database = get();
         const saltRounds = 10;
 
-        const name = req.body.name.value;
         const userid = req.body.userid.value;
         const userpw = req.body.userpw.value;
         const email = req.body.email.value;
@@ -94,7 +93,7 @@ module.exports = (router, passport) => {
             bcrypt
                 .hash(userpw, saltRounds)
                 .then(hash => {
-                    userModel.findOneAndUpdate({ userid }, { name, userpw: hash, email })
+                    userModel.findOneAndUpdate({ userid }, { userpw: hash, email })
                         .then(result => {
                             res.json({ success: 200, message: "success" });
                         })

@@ -159,7 +159,7 @@ function UserInfo() {
             <InfoContent>
                 <Title>Information</Title>
                 <form onSubmit={updateHandler}>
-                    <TextField type="text" name="name" value={name.value} label="이름(Name)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={name.error} helperText={name.error && "이름을 확인하세요.(한글 2글자 이상)"} />
+                    <TextField type="text" name="name" value={name.value} label="이름(Name)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={name.error} helperText={name.error && "이름을 확인하세요.(한글 2글자 이상)"} disabled />
                     <TextField type="text" name="userid" value={userid.value} label="아이디(ID)" variant="outlined" required fullWidth margin="normal" disabled />
                     <TextField type="password" name="userpw" value={userpw.value} label="비밀번호(Password)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={userpw.error} helperText={userpw.error && "비밀번호를 확인하세요.(영문자 혹은 숫자 4~12자 이내)"} />
                     <TextField type="email" name="email" value={email.value} label="이메일(Email)" onChange={onChange} variant="outlined" required fullWidth margin="normal" error={email.error} helperText={email.error && "이메일 형식을 확인해주세요."} />
