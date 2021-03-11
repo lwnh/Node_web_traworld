@@ -21,7 +21,7 @@ module.exports = new LocalStrategy({
                 if (!isMatch) {
                     return done(null, false, { success: 201, message: '비밀번호를 확인해주세요.' });
                 }
-                return done(null, user, { success: 200, msg: "success", userid });
+                return done(null, user, { success: 200, message: "success", user: user.name });
             })
         });
     }

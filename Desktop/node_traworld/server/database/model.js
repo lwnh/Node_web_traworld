@@ -6,9 +6,10 @@ const userSchema = new mongoose.Schema({
 	userIdx: mongoose.Schema.Types.ObjectId,
 	name: { type: String, required: true, },
 	userid: { type: String, required: true, unique: true },
-	userpw: { type: String, required: true },
-	email: { type: String, required: true },
-	salt: { type: String },
+	userpw: { type: String },
+	email: { type: String },
+	provider: {type: String, default: ''},
+	authToken: {type: String, default: ''},
 }, {
 	versionKey: false,
 });

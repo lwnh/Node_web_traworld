@@ -9,6 +9,13 @@ const { get } = require('../database/database');
 const userModel = require('../database/model');
 
 module.exports = (router, passport) => {
+    router.post('/', function (req, res) {
+        if (req.user) {
+            res.json({ success: 200, message: "success", user: req.user.name });
+        }
+        res.end();
+    });
+
     router.post('/contact', function (req, res) {
         const fromemail = req.body.email;
         const from = req.body.name;
@@ -45,7 +52,7 @@ module.exports = (router, passport) => {
                 res.end();
             }
         });
-    })
+    });
 
     router.post('/login', function (req, res, next) {
         passport.authenticate('local-login', function (err, user, info) {
@@ -65,6 +72,15 @@ module.exports = (router, passport) => {
         })(req, res, next);
     });
 
+    router.get('/auth/facebook', passport.authenticate('facebook', {
+        scope: ['public_profile', 'email']
+    }));
+
+    router.get('/auth/facebook/callback', passport.authenticate('facebook', {
+        successRedirect: '/',
+        failureRedirect: '/login'
+    }));
+
     router.post('/update', function (req, res) {
         const database = get();
         const saltRounds = 10;
@@ -80,21 +96,21 @@ module.exports = (router, passport) => {
                 .then(hash => {
                     userModel.findOneAndUpdate({ userid }, { name, userpw: hash, email })
                         .then(result => {
-                            res.json({ success: 200, msg: "success" });
+                            res.json({ success: 200, message: "success" });
                         })
                         .catch(err => {
                             console.log(err)
-                            res.json({ success: 201, msg: "fail" });
+                            res.json({ success: 201, message: "fail" });
                         })
                 })
                 .catch(err => {
                     console.log(err)
-                    res.json({ success: 201, msg: "fail" });
+                    res.json({ success: 201, message: "fail" });
                 });
         } else {
-            res.json({ success: 300, msg: "database error" });
+            res.json({ success: 300, message: "database error" });
         }
-    })
+    });
 
     router.post('/delete', function (req, res) {
         const database = get();
@@ -111,34 +127,34 @@ module.exports = (router, passport) => {
                             res.end()
                         }
                     })
-                    res.json({ success: 200, msg: "success" });
+                    res.json({ success: 200, message: "success" });
                 })
                 .catch(err => {
                     console.log(err)
-                    res.json({ success: 201, msg: "fail" });
+                    res.json({ success: 201, message: "fail" });
                 })
         } else {
-            res.json({ success: 300, msg: "database error" });
+            res.json({ success: 300, message: "database error" });
         }
-    })
+    });
 
     router.post('/userinfo', function (req, res) {
         const database = get();
-        const userid = req.body.userid;
+        const userid = req.user.userid;
 
         if (database) {
             userModel.find({ userid })
                 .then(result => {
-                    res.json({ success: 200, msg: "success", result });
+                    res.json({ success: 200, message: "success", result });
                 })
                 .catch(err => {
                     console.log(err);
-                    res.json({ success: 201, msg: "fail" });
+                    res.json({ success: 201, message: "fail" });
                 })
         } else {
-            res.json({ success: 300, msg: "database error" });
+            res.json({ success: 300, message: "database error" });
         }
-    })
+    });
 
     router.post('/logout', function (req, res) {
         req.logout();
@@ -146,5 +162,6 @@ module.exports = (router, passport) => {
             res.redirect('/');
         });
     });
+
     return router;
 }

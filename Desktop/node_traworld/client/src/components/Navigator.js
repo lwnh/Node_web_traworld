@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
@@ -10,6 +10,23 @@ const textStyle = {
 
 function Navigator() {
     const isLogin = sessionStorage.getItem('user');
+
+    useEffect(() => {
+        userHandler();
+    }, [])
+
+    const userHandler = async () => {
+        try {
+            await axios.post('/api/')
+                .then((response) => {
+                    if (response.data.user) {
+                        sessionStorage.setItem('user', response.data.user);
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const logoutHandler = async () => {
         sessionStorage.removeItem('user');
@@ -34,7 +51,7 @@ function Navigator() {
                 </Nav>
                 {isLogin && (<a href="./userInfo" style={textStyle}>{isLogin}님</a>)}
                 {isLogin ? (
-                    <Button variant="outline-secondary" onClick={logoutHandler} href='/'>LOGOUT</Button> 
+                    <Button variant="outline-secondary" onClick={logoutHandler} href='/'>LOGOUT</Button>
                 ) : <Button variant="outline-secondary" href="./login">LOGIN</Button>}
             </Navbar>
         </>

@@ -20,11 +20,17 @@ const LoginContent = styled.div`
     text-align: center;
     .btn-secondary {
         margin-top: 2rem;
-        width: 100%
+        width: 100%;
     }
     .btn-dark {
         margin-top: 1rem;
-        width: 100%
+        width: 100%;
+    }
+    .btn-primary {
+        margin-top: 1rem;
+        width: 100%;
+        background-color: #4267B2;
+        border : 1px solid#4267B2;
     }
 `;
 
@@ -52,7 +58,7 @@ function Login() {
                 .then((response) => {
                     switch (response.data.success) {
                         case 200:   //success
-                            sessionStorage.setItem('user', response.data.userid)
+                            sessionStorage.setItem('user', response.data.user);
                             window.location.replace('/');
                             break;
                         case 201:   //password fail
@@ -78,8 +84,11 @@ function Login() {
                 <form onSubmit={loginSubmit}>
                     <TextField type="text" name="userid" label="ID" required fullWidth margin="normal" onChange={onChange} value={userid} />
                     <TextField type="password" name="userpw" label="PASSWORD" required fullWidth margin="normal" onChange={onChange} value={userpw} />
-                    <Button type="submit" variant="secondary">LOGIN</Button><br />
-                    <Button variant="dark" href="./signup">SIGN UP</Button>
+                    <Button type="submit" variant="secondary">Login</Button><br />
+                    <Button variant="dark" href="./signup">Sign Up</Button>
+                    <a href="http://localhost:3000/api/auth/facebook">
+                        <Button variant="primary">Login with Facebook</Button>
+                    </a>
                 </form>
             </LoginContent>
         </LoginBlock>

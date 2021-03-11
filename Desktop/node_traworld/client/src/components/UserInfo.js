@@ -62,7 +62,7 @@ function UserInfo() {
 
     const infoHandler = async () => {
         try {
-            await axios.post('/api/userinfo', sessionId)
+            await axios.post('/api/userinfo')
                 .then((response) => {
                     switch (response.data.success) {
                         case 200:   //success
